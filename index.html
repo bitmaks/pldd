@@ -17,8 +17,8 @@
 
     <script>document.documentElement.className='js'</script>
 
-    <link rel="stylesheet" href="css/bonsai_custom.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="./css/bonsai_custom.css">
+    <link rel="stylesheet" href="./css/style.css">
 
     <!-- fa icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -29,14 +29,13 @@
     <nav class="bottom_border" style="--py:15px; margin-bottom: 20px;">
         <a class="button grey">Home</a>
         <a class="button white" href="">Tutorial</a>
-        <a class="button white" href="">Gallery</a>
-        <a class="button white" href="https://github.com/sanghviyashiitb/poisson-deblurring">Code</a>
+        <a class="button white" target="_blank" href="https://github.com/sanghviyashiitb/poisson-deblurring">Code</a>
     </nav>
 
     <div class="container">
         <div class="row">
             <h1>Photon-Limited Deblurring Dataset</h1>
-            <h3>Real-world dataset for deblurring in photon-limited scenes </h3>
+            <h4>Real-world dataset for deblurring in photon-limited scenes </h4>
         </div>
 
         <div class="flex-container">
@@ -49,7 +48,7 @@
             <h2>Contains</h2>
             <ul>
                 <li>30 low-light photon shot noise corrputed, blurred images in RAW format</li>
-                <li>Corresponding blur kernel captured using a 30um pinhole</li>
+                <li>Corresponding blur kernel captured using a 30µm pinhole</li>
                 <li>Ground truth for each image.</li>
             </ul>
             <div class="center">
@@ -63,6 +62,12 @@
                 target="_blank">demo_synthetic.py</a>
              in our Github repository.
         </div>
+        <br>
+
+        <div class="row">
+            <h2>Performance Comparison</h2>
+        </div>
+
         <br>
         <div class="row">
             <h2>Current Benchmarks</h2>
