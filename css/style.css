@@ -18,8 +18,10 @@ main {
 }
 
 code {
+    font-family: "Monaco", "Roboto Mono", monospace;
     border-radius: 0.5rem;
-    border: solid 1px grey;
+    /* need to ovewrite highlight.js theme a little */
+    background: rgba(100,100,100,.05) !important;
 }
 
 footer {
