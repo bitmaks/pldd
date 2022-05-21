@@ -20,6 +20,7 @@ main {
 code {
     font-family: "Monaco", "Roboto Mono", monospace;
     border-radius: 0.5rem;
+    border: 1px solid lightgrey;
     /* need to ovewrite highlight.js theme a little */
     background: rgba(100,100,100,.05) !important;
 }

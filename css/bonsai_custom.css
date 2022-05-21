@@ -79,7 +79,7 @@ time {
   color: var(--code);
   padding: 2.5px 5px;
   border-radius: 6px;
-  font-size: 1em;
+  font-size: 0.9em;
 }
 pre > code {
   padding: 10px;
