@@ -19,6 +19,8 @@
 	<link rel="stylesheet" href="./css/a11y-light.min.css">
 	<script src="./js/highlight.min.js"></script>
 	<script>hljs.highlightAll();</script>
+    <!-- interactive elements -->
+	<script src="./js/magnifier.js"></script>
 </head>
 
 <body>
@@ -32,7 +34,7 @@
     <div class="container">
         <div class="row">
             <h1>Photon-Limited Deblurring Dataset</h1>
-            <h4>Real-world dataset for deblurring in photon-limited scenes </h4>
+            <h4>Real-world dataset for evaluating deblurring algorithms in photon-limited scenes </h4>
         </div>
 
         <div class="flex-container">
@@ -62,7 +64,43 @@
         <br>
 
         <div class="row">
-            <h2>Performance Comparison</h2>
+            <h2>Performance</h2>
+            <h4>Comparing granularity of alternate methods</h4>
+            <br>
+            <div class="comparison-container">
+                <div class="comparison-interactive-container">
+                    <div class="comparison-interactive-img-container">
+                        <img class="comparison-interactive-img" id="img-raw" src="./img/y_23.png">
+                    </div>
+                    <div class="comparison-interactive-meta">
+                        <p>file: y_23.png</p>
+                        <p id="labelX">mouseX: 0</p>
+                        <p id="labelY">mouseY: 0</p>
+                        <p>PSNR: 23.48</p>
+                        <p>SSIM: 0.48</p>
+                        <p>zoomLevel: 4</p>
+                        <p>lightLevel: 0.48</p>
+                    </div>
+                </div>
+                <div class="comparison-output-container">
+                    <div class="comparison-output-img-container">
+                        <img class="comparison-output-img" id="dpir_23.png">
+                        <p class="center">DPIR</p>
+                    </div>
+                    <div class="comparison-output-img-container">
+                        <div class="comparison-output-img" id="purelet_23.png"></div>
+                        <p class="center">Purelet</p>
+                    </div>
+                    <div class="comparison-output-img-container">
+                        <div class="comparison-output-img" id="p4ip_23.png"></div>
+                        <p class="center">P4IP</p>
+                    </div>
+                    <div class="comparison-output-img-container">
+                        <div class="comparison-output-img" id="wiener_23.png"></div>
+                        <p class="center">Wiener</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <br>
@@ -146,5 +184,12 @@
         at Purdue University.</h6>
     </div>
 </footer>
+
+<script>
+/* Initiate Magnify Function
+with the id of the image, and the strength of the magnifier glass:*/
+magnify("img-raw", "dpir_23.png", "purelet_23.png", "p4ip_23.png", "wiener_23.png", 4);
+</script>
+
 </body>
 </html>
