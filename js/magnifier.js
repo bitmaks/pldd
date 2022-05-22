@@ -43,6 +43,10 @@ function magnify(imgID, o1, o2, o3, o4, zoom) {
     out4.style.backgroundRepeat = "no-repeat";
     out4.style.backgroundSize = (img.width * zoom) + "px " + (img.height * zoom) + "px";
 
+    /* calculate ratio between divs */
+    dx = out1.width/4;
+    dy = out1.width/3;
+
     /*execute a function when someone moves the magnifier glass over the image:*/
     glass.addEventListener("mousemove", moveMagnifier);
     img.addEventListener("mousemove", moveMagnifier);
@@ -78,10 +82,10 @@ function magnify(imgID, o1, o2, o3, o4, zoom) {
         glass.style.top = (y - h) + "px";
         /*display what the magnifier glass "sees" to the right outputs*/
         glass.style.backgroundPosition = "-" + ((x * zoom) - w + bw) + "px -" + ((y * zoom) - h + bw) + "px";
-        out1.style.backgroundPosition = "-" + ((x * zoom) - w -60 + bw) + "px -" + ((y * zoom) - h - 45 + bw) + "px";
-        out2.style.backgroundPosition = "-" + ((x * zoom) - w -60 + bw) + "px -" + ((y * zoom) - h - 45 + bw) + "px";
-        out3.style.backgroundPosition = "-" + ((x * zoom) - w -60 + bw) + "px -" + ((y * zoom) - h - 45 + bw) + "px";
-        out4.style.backgroundPosition = "-" + ((x * zoom) - w -60 + bw) + "px -" + ((y * zoom) - h - 45 + bw) + "px";
+        out1.style.backgroundPosition = "-" + ((x * zoom) - w -dx + bw) + "px -" + ((y * zoom) - h - dy + bw) + "px";
+        out2.style.backgroundPosition = "-" + ((x * zoom) - w -dx + bw) + "px -" + ((y * zoom) - h - dy + bw) + "px";
+        out3.style.backgroundPosition = "-" + ((x * zoom) - w -dx + bw) + "px -" + ((y * zoom) - h - dy + bw) + "px";
+        out4.style.backgroundPosition = "-" + ((x * zoom) - w -dx + bw) + "px -" + ((y * zoom) - h - dy + bw) + "px";
     }
 
     function getCursorPos(e) {
