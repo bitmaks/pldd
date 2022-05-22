@@ -193,7 +193,7 @@ details > summary::before {
 details[open] > summary::before {
     font-family: FontAwesome;
     content: '\f0d7';
-    margin-right: 8px;
+    margin-right: 10px;
 }
 details > *:last-child {
   padding-bottom: 10px;

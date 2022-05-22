@@ -17,6 +17,68 @@ main {
     width: 100%;
 }
 
+.comparison-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.comparison-interactive-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.comparison-interactive-meta {
+    display: flex;
+    font-family: "San Francisco Mono", "SF Mono", "Monaco", "Robot Mono", monospace;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 0.8rem;
+    margin: 15px;
+    padding: 5px;
+}
+
+.comparison-interactive-img-container {
+    width: 50%;
+    margin: 15px;
+	position: relative;
+}
+
+.comparison-interactive-img-magnifying-glass {
+	position: absolute;
+    border: 3px solid white;
+    border-radius: 0.1rem;
+    cursor: none;
+    /*Set the size of the magnifier glass:*/
+    width: 100px;
+    height: 100px;
+	-webkit-box-shadow: 1px 0 10px 3px rgba(0,0,0,0.2);
+	box-shadow: 1px 0 10px 3px rgba(0,0,0,0.2);
+}
+
+.comparison-interactive-img {
+}
+
+.comparison-output-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.comparison-output-img {
+    flex: 25%;
+    width: 100%;
+}
+
+.comparison-output-img-container {
+    display:flex;
+    flex-direction: column;
+    width: 23%;
+    margin: 5px;
+}
+
 code {
     font-family: "Monaco", "Roboto Mono", monospace;
     border-radius: 0.5rem;
@@ -61,18 +123,20 @@ footer {
     max-height: 200px;
 }
 
-/** General breaking points */
-/* Device = Most of Mobile (Portrait) | Screen = b/w 0 to 480px */
-@media (max-width: 480px) {}
 /* Device = Low Resolution Tablet, Mobile (Landscape) | Screen = b/w 481px to 767px */
-@media (min-width: 481px) and (max-width: 767px) {}
-/* Device = Tablet, iPad (landscape) | Screen = b/w 768px to 1024px */
-@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {}
-/* Device = Tablet, iPad (portrait) | Screen = b/w 768px to 1024px */
-@media (min-width: 768px) and (max-width: 1024px) {}
-/* Device = Laptop, Desktop | Screen = b/w 1025px to 1280px */
-@media (min-width: 1025px) and (max-width: 1280px) {}
-/* Device = Desktop | Screen = 1281px to higher resolution desktops */
-@media (min-width: 1281px) {}
-/* Device = Desktop | Screen = 1599px huge resolution desktops */
-@media (min-width: 1599px) {}
+@media (max-width: 767px) {
+	.comparison-interactive-meta > p{
+		font-size: 0.8rem;
+		margin-bottom: 0.15rem;
+	}
+
+	.comparison-interactive-img-magnifying-glass {
+        width: 5rem;
+        height: 5rem;
+	}
+
+    .comparison-output-img-container {
+        width: 40%;
+        max-width: 40%;
+    }
+}
