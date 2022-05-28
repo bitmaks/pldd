@@ -2,6 +2,13 @@
  Code from w3schools: https://www.w3schools.com/howto/howto_js_image_magnifier_glass.asp
 */
 function magnify(imgID, o1, o2, o3, o4, zoom) {
+    function nameFromSource(const src) {
+        const re = /[^/]*[.][\S]*$/g;
+        const filename = src.match(re);
+        const re2 = /^[^_]*/g;
+        const name = filename[0].match(re2);
+        return name[0];
+    }
     var img, glass, w, h, bw, out1, out2, out3, out4;
     img = document.getElementById(imgID);
     out1 = document.getElementById(o1);
@@ -106,3 +113,8 @@ function magnify(imgID, o1, o2, o3, o4, zoom) {
         };
     }
 }
+
+window.addEventListener('load', function() {
+    console.log('All assets are loaded');
+    magnify("img-raw", "dpir_23.webp", "purelet_23.webp", "p4ip_23.webp", "wiener_23.webp", 4);
+})
