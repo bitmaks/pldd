@@ -2,7 +2,7 @@
  Code from w3schools: https://www.w3schools.com/howto/howto_js_image_magnifier_glass.asp
 */
 function magnify(imgID, o1, o2, o3, o4, zoom) {
-    function nameFromSource(const src) {
+    function nameFromSource(src) {
         const re = /[^/]*[.][\S]*$/g;
         const filename = src.match(re);
         const re2 = /^[^_]*/g;
