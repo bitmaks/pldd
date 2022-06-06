@@ -21,6 +21,7 @@
 	<script>hljs.highlightAll();</script>
     <!-- interactive elements -->
 	<script src="./js/magnifier.js"></script>
+	<script src="./js/imgslider.js"></script>
 </head>
 
 <body>
@@ -65,15 +66,24 @@
 
         <div class="row">
             <h2>Performance</h2>
-            <p>Comparing granularity of alternate methods</p>
+            <p>Below we can visually compare the granularity of alternate methods to ours.</p>
             <br>
             <div class="comparison-container">
+                <strong style="align-self: flex-start; margin-bottom: 10px;" >Sample images from dataset:</strong>
+                <div class="comparison-option-container">
+                    <img class="comparison-option comparison-selected"
+                        id="option-1" onclick="magnifier(this,4)" src="./img/y_23.webp">
+                    <img class="comparison-option" id="option-2" onclick="magnifier(this,4)" src="./img/y_0012.webp">
+                    <img class="comparison-option" id="option-3" onclick="magnifier(this,4)" src="./img/y_23.webp">
+                    <img class="comparison-option" id="option-4" onclick="magnifier(this,4)" src="./img/y_0012.webp">
+                </div>
+                <br>
                 <div class="comparison-interactive-container">
                     <div class="comparison-interactive-img-container">
                         <img class="comparison-interactive-img" id="img-raw" src="./img/y_23.webp">
                     </div>
                     <div class="comparison-interactive-meta">
-                        <p>file: y_23.png</p>
+                        <p id="labelFilename">file: y_23</p>
                         <p id="labelX">mouseX: 0</p>
                         <p id="labelY">mouseY: 0</p>
                         <p>PSNR: 23.48</p>
@@ -83,25 +93,33 @@
                 </div>
                 <div class="comparison-output-container">
                     <div class="comparison-output-img-container">
-                        <img class="comparison-output-img" id="dpir_23.webp" src="./img/transparent.webp">
+                        <img class="comparison-output-img" id="dpir" src="./img/transparent.webp">
                         <p class="center">DPIR</p>
                     </div>
                     <div class="comparison-output-img-container">
-                        <img class="comparison-output-img" id="purelet_23.webp" src="./img/transparent.webp">
+                        <img class="comparison-output-img" id="purelet" src="./img/transparent.webp">
                         <p class="center">Purelet</p>
                     </div>
                     <div class="comparison-output-img-container">
-                        <img class="comparison-output-img" id="wiener_23.webp" src="./img/transparent.webp">
+                        <img class="comparison-output-img" id="wiener" src="./img/transparent.webp">
                         <p class="center">Wiener</p>
                     </div>
                     <div class="comparison-output-img-container">
-                        <img class="comparison-output-img" id="p4ip_23.webp" src="./img/transparent.webp">
+                        <img class="comparison-output-img" id="p4ip" src="./img/transparent.webp">
                         <p class="center">P4IP</p>
                     </div>
                 </div>
             </div>
         </div>
-
+        <br>
+		<div class="img-comp-container">
+			<div class="img-comp-img">
+				<img src="./img/dpir_0012.webp" width="300" height="200">
+			</div>
+			<div class="img-comp-img img-comp-overlay">
+				<img src="./img/gt_0012.webp" width="300" height="200">
+			</div>
+		</div>
         <br>
         <div class="row">
             <h2>Current Benchmarks</h2>

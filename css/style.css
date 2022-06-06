@@ -24,6 +24,26 @@ main {
     justify-content: flex-start;
 }
 
+.comparison-option-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.comparison-option {
+    width: 22%;
+    margin: 5px;
+    border-radius: 0.2rem;
+}
+
+.comparison-selected {
+    border: 0.3rem solid white;
+    border-radius: 0.3rem;
+	-webkit-box-shadow: 1px 0 10px 3px rgba(0,0,0,0.2);
+	box-shadow: 1px 0 10px 3px rgba(0,0,0,0.2);
+}
+
 .comparison-interactive-container {
     display: flex;
     justify-content: space-between;
@@ -37,6 +57,7 @@ main {
     align-items: flex-end;
     border-radius: 0.8rem;
     margin: 15px;
+    margin-top: 20px;
     padding: 5px;
 }
 

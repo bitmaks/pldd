@@ -1,29 +1,50 @@
 /*
  Code from w3schools: https://www.w3schools.com/howto/howto_js_image_magnifier_glass.asp
 */
-function magnify(imgID, o1, o2, o3, o4, zoom) {
-    function nameFromSource(src) {
-        const re = /[^/]*[.][\S]*$/g;
+function magnify(imgSrc, zoom) {
+    function getSuffix(src) {
+        const re = /[^_]+[.]\S+$/g;
         const filename = src.match(re);
-        const re2 = /^[^_]*/g;
-        const name = filename[0].match(re2);
-        return name[0];
+        return filename[0];
+    }
+    function removeExtension(file) {
+        const re = /^[^.]+/g;
+        const match = file.match(re);
+        return match[0];
     }
     var img, glass, w, h, bw, out1, out2, out3, out4;
-    img = document.getElementById(imgID);
+    var o1, o2, o3, o4;
+
+    var fileSuffix = getSuffix(imgSrc);
+    var imgRoot = "./img/";
+    img = document.getElementById("img-raw");
+    img.src = imgRoot + "y_" + fileSuffix;
+
+    o1 = "dpir";
+    o2 = "purelet";
+    o3 = "p4ip";
+    o4 = "wiener";
     out1 = document.getElementById(o1);
     out2 = document.getElementById(o2);
     out3 = document.getElementById(o3);
     out4 = document.getElementById(o4);
+
     labelX = document.getElementById("labelX");
     labelY = document.getElementById("labelY");
+    labelFilename = document.getElementById("labelFilename");
+    labelFilename.textContent = "file: " + "y_" + removeExtension(fileSuffix);
 
     /*create magnifier glass:*/
-    glass = document.createElement("DIV");
-    glass.setAttribute("class", "comparison-interactive-img-magnifying-glass");
-
-    /*insert magnifier glass:*/
-    img.parentElement.insertBefore(glass, img);
+    var instances = document.getElementsByClassName("comparison-interactive-img-magnifying-glass")
+    var glass;
+    if (instances.length == 0) {
+        glass = document.createElement("DIV");
+        glass.setAttribute("class", "comparison-interactive-img-magnifying-glass");
+        /*insert magnifier glass:*/
+        img.parentElement.insertBefore(glass, img);
+    } else {
+        glass = instances[0];
+    }
 
     /*set background properties for the magnifier glass:*/
     glass.style.backgroundImage = "url('" + img.src + "')";
@@ -34,19 +55,19 @@ function magnify(imgID, o1, o2, o3, o4, zoom) {
     h = glass.offsetHeight / 2;
 
 	/*set background properties for the output images*/
-    out1.style.backgroundImage = "url('" + "./img/" + o1 + "')";
+    out1.style.backgroundImage = "url('" + imgRoot + o1 + "_" + fileSuffix + "')";
     out1.style.backgroundRepeat = "no-repeat";
     out1.style.backgroundSize = (img.width * zoom) + "px " + (img.height * zoom) + "px";
 
-    out2.style.backgroundImage = "url('" + "./img/" + o2 + "')";
+    out2.style.backgroundImage = "url('" + imgRoot + o2 + "_" + fileSuffix + "')";
     out2.style.backgroundRepeat = "no-repeat";
     out2.style.backgroundSize = (img.width * zoom) + "px " + (img.height * zoom) + "px";
 
-    out3.style.backgroundImage = "url('" + "./img/" + o3 + "')";
+    out3.style.backgroundImage = "url('" + imgRoot + o3 + "_" + fileSuffix + "')";
     out3.style.backgroundRepeat = "no-repeat";
     out3.style.backgroundSize = (img.width * zoom) + "px " + (img.height * zoom) + "px";
 
-    out4.style.backgroundImage = "url('" + "./img/" + o4 + "')";
+    out4.style.backgroundImage = "url('" + imgRoot + o4 + "_" + fileSuffix + "')";
     out4.style.backgroundRepeat = "no-repeat";
     out4.style.backgroundSize = (img.width * zoom) + "px " + (img.height * zoom) + "px";
 
@@ -114,7 +135,14 @@ function magnify(imgID, o1, o2, o3, o4, zoom) {
     }
 }
 
+function magnifier(el, zoom) {
+    var childs = Array.from(el.parentElement.children);
+    childs.forEach(child => child.className = "comparison-option");
+    magnify(el.src, 4)
+    el.className += " comparison-selected"
+}
+
 window.addEventListener('load', function() {
-    console.log('All assets are loaded');
-    magnify("img-raw", "dpir_23.webp", "purelet_23.webp", "p4ip_23.webp", "wiener_23.webp", 4);
+    var first = document.getElementById("option-1");
+    magnifier(first, 4);
 })
