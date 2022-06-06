@@ -3,7 +3,7 @@
 */
 function magnify(imgSrc, zoom) {
     function getSuffix(src) {
-        const re = /[^_]+[.]\S+$/g;
+        const re = /[^_]+[.][a-zA-Z]+$/g;
         const filename = src.match(re);
         return filename[0];
     }
