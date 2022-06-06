@@ -73,8 +73,8 @@ main {
     border-radius: 0.1rem;
     cursor: none;
     /*Set the size of the magnifier glass:*/
-    width: 100px;
-    height: 100px;
+    width: 6rem;
+    height: 6rem;
 	-webkit-box-shadow: 1px 0 10px 3px rgba(0,0,0,0.2);
 	box-shadow: 1px 0 10px 3px rgba(0,0,0,0.2);
 }
@@ -193,8 +193,8 @@ footer {
 	}
 
 	.comparison-interactive-img-magnifying-glass {
-        width: 5rem;
-        height: 5rem;
+        width: 4.5rem;
+        height: 4.5rem;
 	}
 
     .comparison-output-img-container {
