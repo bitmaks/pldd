@@ -46,17 +46,18 @@ main {
 
 .comparison-interactive-container {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    /*flex-direction: column;*/
+    justify-content: space-between;
     align-items: center;
     width: 100%;
 }
 
-.comparison-interactive-caption {
+.comparison-interactive-meta {
     display: flex;
     font-family: "San Francisco Mono", "SF Mono", "Monaco", "Robot Mono", monospace;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
+    align-self: flex-start;
     border-radius: 0.8rem;
     margin: 15px;
     margin-top: 20px;
@@ -64,7 +65,7 @@ main {
 }
 
 .comparison-interactive-img-container {
-    width: 75%;
+    width: 65%;
     margin: 15px;
 	position: relative;
 }
@@ -189,7 +190,7 @@ footer {
 
 /* Device = Low Resolution Tablet, Mobile (Landscape) | Screen = b/w 481px to 767px */
 @media (max-width: 767px) {
-	.comparison-interactive-label {
+	.comparison-interactive-meta > p {
 		font-size: 0.8rem;
 		margin-bottom: 0.15rem;
 	}

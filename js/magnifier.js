@@ -29,8 +29,8 @@ function magnify(imgSrc, zoom) {
     out3 = document.getElementById(o3);
     out4 = document.getElementById(o4);
 
-//    labelX = document.getElementById("labelX");
-//    labelY = document.getElementById("labelY");
+    labelX = document.getElementById("labelX");
+    labelY = document.getElementById("labelY");
     labelFilename = document.getElementById("labelFilename");
     labelFilename.textContent = "image: " + "y_" + removeExtension(fileSuffix);
 
@@ -89,9 +89,9 @@ function magnify(imgSrc, zoom) {
         /*get the cursor's x and y positions:*/
         pos = getCursorPos(e);
         x = pos.x;
-        // labelX.textContent = ("mouseX: " + parseInt(30 + x));
+         labelX.textContent = ("mouseX: " + parseInt(30 + x));
         y = pos.y;
-        // labelY.textContent = ("mouseY: " + parseInt(30 + y));
+         labelY.textContent = ("mouseY: " + parseInt(30 + y));
         /*prevent the magnifier glass from being positioned outside the image:*/
         if (x > img.width - (w / zoom)) {
             x = img.width - (w / zoom);

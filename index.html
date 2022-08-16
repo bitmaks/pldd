@@ -65,7 +65,8 @@
 
         <div class="row">
             <h2>Performance</h2>
-            <p>In this section we can show the differences in granularity of alternate methods to ours. Hover over the image and use the magnifying glass to see the differences between the algorithms</p>
+            <p>In this section we can show the differences in granularity of alternate methods to ours. Hover over the image and use the magnifying glass to see the differences between the algorithms.</p>
+            <p>The bottom left corner of the noisy image shows its kernel.</p>
             <br>
             <div class="comparison-container">
                 <strong style="align-self: flex-start; margin-bottom: 10px;" >Sample images from dataset:</strong>
@@ -78,9 +79,17 @@
                 </div>
                 <br>
                 <div class="comparison-interactive-container">
-                    <p class="comparison-interactive-caption" id="labelFilename">image: y_23</p>
+                    <!-- <p class="comparison-interactive-caption" id="labelFilename">image: y_23</p> -->
                     <div class="comparison-interactive-img-container">
                         <img class="comparison-interactive-img" id="img-raw" src="./img/y_23.webp">
+                    </div>
+                    <div class="comparison-interactive-meta">
+                        <p id="labelFilename">image: y_23</p>
+                        <p id="labelX">mouseX: 0</p>
+                        <p id="labelY">mouseY: 0</p>
+                        <p>PSNR: 23.48</p>
+                        <p>SSIM: 0.48</p>
+                        <p>zoomLevel: 4</p>
                     </div>
                 </div>
                 <div class="comparison-output-container">
