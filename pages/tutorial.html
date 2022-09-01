@@ -109,6 +109,7 @@ plt.subplot(2,2,3); plt.imshow(y[H1:H2, W1:W2,:], vmin=np.min(y), vmax=np.max(y)
 plt.axis('off')
 plt.subplot(2,2,4); plt.imshow(x_p4ip[H1:H2, W1:W2,:], vmin=np.min(y), vmax=np.max(y))
 plt.axis('off')</code></pre>
+    <hr>
 	<pre><code>OUTPUT: (-0.5, 499.5, 499.5, -0.5)</code></pre>
     <img src="../img/fig2.webp"></img>
 	<p><br>To evaluate our result, we use the ground-truth image but with few extra steps.</p>
@@ -146,9 +147,18 @@ err_mean = np.sqrt(np.mean(err**2))
 psnr=-20*np.log10(err_mean/255.0)
 ssim_val = ssim(im_register, im_estimated,  multichannel = True ,data_range=255)
 print('PSNR: %0.2f, SSIM: %0.3f'%(psnr,ssim_val))</code></pre>
+    <hr>
 	<pre><code>PSNR: 28.37, SSIM: 0.732</code></pre>
     <img src="../img/fig3.webp"></img>
 	<p><br>Thank you for making it to the end! If you have further questions about the dataset, please send your queries to <a href="mailto:ysanghvi@purdue.edu" target="_blank">ysanghvi@purdue.edu</a> or <a href="mailto:sanghviyash95@gmail.com" target="_blank">sanghviyash95@gmail.com</a>. If you're using the dataset, please cite us as follows:</p>
+    <pre><code>
+    @article{sanghvi2021photon,
+      title={Photon limited non-blind deblurring using algorithm unrolling},
+        author={Sanghvi, Yash and Gnanasambandam, Abhiram and Chan, Stanley H},
+          journal={arXiv preprint arXiv:2110.15314},
+            year={2021}
+    }
+    </code></pre>
     </div>
 </main>
 <footer>

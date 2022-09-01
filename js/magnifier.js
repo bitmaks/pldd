@@ -138,7 +138,7 @@ function magnify(imgSrc, zoom) {
 function magnifier(el, zoom) {
     var childs = Array.from(el.parentElement.children);
     childs.forEach(child => child.className = "comparison-option");
-    magnify(el.src, 4)
+    magnify(el.src, zoom)
     el.className += " comparison-selected"
 }
 
