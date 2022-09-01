@@ -31,70 +31,124 @@
 
     <div class="container">
         <h1>Tutorial</h1>
-        <h4>ResUNet.py code</h4>
-        <pre><code>import models.resnet_basicblock as B
-import torch
-import torch.nn as nn
-import numpy as np
+        <p>For the Photon-Limited Deblurring dataset proposed in the paper <a href="https://doi.org/10.48550/arXiv.2110.15314" target="_blank">"Photon Limited Non-Blind Deblurring using Algorithm Unrolling"</a>.
+        <br><br>
+        In this tutorial, we introduce the photon-limited deblurring dataset which consists of raw sensor values of photon-limited blurred images, the corresponding blur kernels and the ground truths.
+        <br><br>
+        The images in this dataset are in raw sensor values unlike traditional datasets with RGB images in compressod form. Therefore, we walk you through how to load the images, reconstruct them using our method and evaluate them using the ground-truth.
+        <br><br>
+        First we load the images, with index 14, and the corresponding blur kernel. The image is in Bayer format (RGGB) and blurred with camera motion and corrupted with photon shot noise since it was taken in a scene with low-illumination.</p>
+        <pre><code>import numpy as np
+import matplotlib.pyplot as plt
+from utils.utils_deblur import pad
 
-"""
-# Code from the following paper
-# --------------------------------------------
-# Kai Zhang (cskaizhang@gmail.com)
-# @inproceedings{zhang2020deep,
-  # title={Deep unfolding network for image super-resolution},
-  # author={Zhang, Kai and Van Gool, Luc and Timofte, Radu},
-  # booktitle={IEEE Conference on Computer Vision and Pattern Recognition},
-  # pages={0--0},
-  # year={2020}
-}
-# --------------------------------------------
-"""
+DATA_DIR = 'data/real_data/'
+IDX = 14
 
-"""
-# --------------------------------------------
-# (1) Prior module; ResUNet: act as a non-blind denoiser
-# x_k = P(z_k, beta_k)
-# --------------------------------------------
-"""
+# Load data-files
+y = np.load(DATA_DIR+'lux5/cut'+str(IDX)+'.npy')     # Noisy-blurred Bayer-pattern image
+k = np.load(DATA_DIR+'lux5/kernel'+str(IDX)+'.npy')  # blur kernel
+# Clipping negative values of 'y' and 'k' and normalize entries of 'k' to 1
+y = np.clip(y.astype(np.float32),0,np.inf); k = np.clip(k.astype(np.float32),0,np.inf)
+k /= np.sum(np.ravel(k))
+k = pad(k , [65,65])
+
+# Visualize the images
+plt.subplot(1,3,1); plt.imshow(y,cmap='gray'); plt.title('Noisy Blurred'); plt.axis('off')
+plt.subplot(1,3,2); plt.imshow(y[400:800, 600:1000],cmap='gray'); plt.title('Zoomed In'); plt.axis('off')
+plt.subplot(1,3,3); plt.imshow(k,cmap='gray'); plt.title('Blur Kernel'); plt.axis('off')</code></pre>
+	<hr>
+	<pre><code>OUTPUT: (-0.5, 64.5, 64.5, -0.5)</code></pre>
+    <img src="../img/fig1.webp"></img>
+    <p><br>Next, we load our non-blind solver P4IP_Net which can deblur noisy and blurred image. We take the raw Bayer pattern image in the variable 'y' and separate it out into 4 channels - R, G1, G2, B. The photon level for each channel is estimated separately using a heuristic.</p>
+
+    <pre><code>import torch
+from models.network_p4ip import P4IP_Net
+
+# Load the network
+MODEL_FILE = 'model_zoo/p4ip_100epoch.pth'
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+p4ip = P4IP_Net(); p4ip.load_state_dict(torch.load(MODEL_FILE));
+p4ip.to(device); p4ip.eval()
+
+# Convert Bayer-pattern images to list of grayscales images
+# R, G1, G2, B - 4 channels which togethor constitute the Bayer image
+y_list = []
+y_list.append(y[0::2, 0::2])
+y_list.append(y[0::2, 1::2])
+y_list.append(y[1::2, 0::2])
+y_list.append(y[1::2, 1::2])
+H, W = np.shape(y)
+
+# Evaluate photon-levels for each channel using the heuristic used in [1]
+M_list = []
+for y in y_list:
+    M_hat = np.mean(np.ravel(y))/0.33
+    M_list.append(M_hat)</code></pre>
+    <p>In this step, each channel is restored by the wrapper function _p4ip_wrapper<i>pad</i> - which pads the input image y symmetrically, passes it through the network and then returns the cropped out version of the output.</p>
+    <pre><code>from utils.utils_test import p4ip_wrapper_pad
+
+rggb_list = []
+for y, M in zip(y_list, M_list):
+    # Slightly time consuming step
+    x_rec = p4ip_wrapper_pad(y, k, M, p4ip)
+    rggb_list.append(x_rec*M)</code></pre>
+	<p>Since, we have the reconstructed outputs for each channel, we combine them into a single RGB image using demosaicing - followed by gray world white-balancing (making sure mean of each channel is the same).</p>
+	<pre><code>from utils.utils_test import rggb_to_rgb, gray_world_whitebalance
+
+MODE = 'BGGR' if IDX in [15,20,24] else 'RGGB'
+x_p4ip = rggb_to_rgb(rggb_list, H, W, MODE); x_p4ip = gray_world_whitebalance(x_p4ip)
+y = rggb_to_rgb(y_list, H, W, MODE); y = gray_world_whitebalance(y)
 
 
-class ResUNet(nn.Module):
-	def __init__(self, in_nc=1, out_nc=1, nc=[64, 128, 256, 512], nb=2, act_mode='R', downsample_mode='strideconv', upsample_mode='convtranspose'):
-		super(ResUNet, self).__init__()
+plt.subplot(2,2,1); plt.imshow(y, vmin=np.min(y), vmax=np.max(y)); plt.title('Noisy, Blurred'); plt.axis('off')
+plt.subplot(2,2,2); plt.imshow(x_p4ip, vmin=np.min(y), vmax=np.max(y)); plt.title('Reconstruction'); plt.axis('off')
 
-		self.m_head = B.conv(in_nc, nc[0], bias=False, mode='C')
-		# downsample
-		downsample_block = B.downsample_strideconv	
-		self.m_down1 = B.sequential(*[B.ResBlock(nc[0], nc[0], bias=False, mode='C'+act_mode+'C') for _ in range(nb)], downsample_block(nc[0], nc[1], bias=False, mode='2'))
-		self.m_down2 = B.sequential(*[B.ResBlock(nc[1], nc[1], bias=False, mode='C'+act_mode+'C') for _ in range(nb)], downsample_block(nc[1], nc[2], bias=False, mode='2'))
-		self.m_down3 = B.sequential(*[B.ResBlock(nc[2], nc[2], bias=False, mode='C'+act_mode+'C') for _ in range(nb)], downsample_block(nc[2], nc[3], bias=False, mode='2'))
-		self.m_body  = B.sequential(*[B.ResBlock(nc[3], nc[3], bias=False, mode='C'+act_mode+'C') for _ in range(nb)])
+H1, H2, W1, W2 = 800, 1300, 800, 1300
+plt.subplot(2,2,3); plt.imshow(y[H1:H2, W1:W2,:], vmin=np.min(y), vmax=np.max(y))
+plt.axis('off')
+plt.subplot(2,2,4); plt.imshow(x_p4ip[H1:H2, W1:W2,:], vmin=np.min(y), vmax=np.max(y))
+plt.axis('off')</code></pre>
+	<pre><code>OUTPUT: (-0.5, 499.5, 499.5, -0.5)</code></pre>
+    <img src="../img/fig2.webp"></img>
+	<p><br>To evaluate our result, we use the ground-truth image but with few extra steps.</p>
+	<ol>
+		<li>We need to register the ground-truth image to our reconstruction since the two were taken with different cmaera positions</li>
+		<li>Once the images are regsitered to each other, we ensure that both images have the same whitebalance before we evaluate our reconstruction scheme using PSNR and SSIM.</li>
+	</ol>
+	<pre><code>from utils.utils_test import img_register
+from skimage.metrics import structural_similarity as ssim
+import cv2 as cv2
+# Load images in CV2 format for image registration and comparison
+IDX_CLEAN = int(IDX/3)
+x_gt = cv2.imread(DATA_DIR+'lux5_clean/'+str(IDX_CLEAN)+'.png') # clean image
+x_gt = np.flip(x_gt, 2) ## Flip because cv2 loads in BGR format instead of RGB
 
-		# upsample 
-		upsample_block = B.upsample_convtranspose
-		self.m_up3 = B.sequential(upsample_block(nc[3], nc[2], bias=False, mode='2'), *[B.ResBlock(nc[2], nc[2], bias=False, mode='C'+act_mode+'C') for _ in range(nb)])
-		self.m_up2 = B.sequential(upsample_block(nc[2], nc[1], bias=False, mode='2'), *[B.ResBlock(nc[1], nc[1], bias=False, mode='C'+act_mode+'C') for _ in range(nb)])
-		self.m_up1 = B.sequential(upsample_block(nc[1], nc[0], bias=False, mode='2'), *[B.ResBlock(nc[0], nc[0], bias=False, mode='C'+act_mode+'C') for _ in range(nb)])
-		self.m_tail = B.conv(nc[0], out_nc, bias=False, mode='C')
+x_p4ip_norm = (x_p4ip-np.min(x_p4ip))/(np.max(x_p4ip)-np.min(x_p4ip))
+im_register, im_estimated =  img_register(x_gt, (x_p4ip_norm*255).astype(np.uint8))
 
-	def forward(self, x):
-		h, w = x.size()[-2:]
-		paddingBottom = int(np.ceil(h/8)*8-h)
-		paddingRight = int(np.ceil(w/8)*8-w)
-		x = nn.ReplicationPad2d((0, paddingRight, 0, paddingBottom))(x)
+def change_whitebalance(img_src, img_target):
+    mean_src = np.mean(img_src, axis=(0,1))
+    mean_target = np.mean(img_target, axis=(0,1))
 
-		x1 = self.m_head(x)
-		x2 = self.m_down1(x1)
-		x3 = self.m_down2(x2)
-		x4 = self.m_down3(x3)
-		x = self.m_body(x4)
-		x = self.m_up3(x+x4)
-		x = self.m_up2(x+x3)
-		x = self.m_up1(x+x2)
-		x = self.m_tail(x+x1)
-		x = x[..., :h, :w]
-		return x </code></pre>
+    for idx in range(3):
+        img_src[:,:,idx] = img_src[:,:,idx].astype(np.float32)*mean_target[idx]/mean_src[idx]
+    return img_src, img_target
+
+im_estimated, im_register = change_whitebalance(x_p4ip, im_register.astype(np.float32))
+
+
+plt.subplot(1,2,1); plt.imshow(im_register/255.0); plt.title('Ground Truth'); plt.axis('off')
+plt.subplot(1,2,2); plt.imshow(im_estimated/255.0); plt.title('Reconstruction'); plt.axis('off')
+
+err = im_register-im_estimated
+err_mean = np.sqrt(np.mean(err**2))
+psnr=-20*np.log10(err_mean/255.0)
+ssim_val = ssim(im_register, im_estimated,  multichannel = True ,data_range=255)
+print('PSNR: %0.2f, SSIM: %0.3f'%(psnr,ssim_val))</code></pre>
+	<pre><code>PSNR: 28.37, SSIM: 0.732</code></pre>
+    <img src="../img/fig3.webp"></img>
+	<p><br>Thank you for making it to the end! If you have further questions about the dataset, please send your queries to <a href="mailto:ysanghvi@purdue.edu" target="_blank">ysanghvi@purdue.edu</a> or <a href="mailto:sanghviyash95@gmail.com" target="_blank">sanghviyash95@gmail.com</a>. If you're using the dataset, please cite us as follows:</p>
     </div>
 </main>
 <footer>
