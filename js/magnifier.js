@@ -20,7 +20,7 @@ function magnify(imgSrc, zoom) {
     img = document.getElementById("img-raw");
     img.src = imgRoot + "y_" + fileSuffix;
 
-    o1 = "dpir";
+    o1 = "rgdn";
     o2 = "purelet";
     o3 = "p4ip";
     o4 = "wiener";
