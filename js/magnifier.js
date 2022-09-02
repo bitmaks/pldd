@@ -144,5 +144,5 @@ function magnifier(el, zoom) {
 
 window.addEventListener('load', function() {
     var first = document.getElementById("option-1");
-    magnifier(first, 4);
+    magnifier(first, 6);
 })
